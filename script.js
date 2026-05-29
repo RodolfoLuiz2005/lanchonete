@@ -79,27 +79,45 @@ const inputEndereco = document.getElementById('input-endereco')
         cartCount.textContent = totalQty;
     }
 
-    function getProductFromCard(card) {
-        const title = card.querySelector('.card-info h2')?.textContent.trim() || '';
-        const desc = card.querySelector('.card-info p')?.textContent.trim() || '';
-        const priceText = card.querySelector('.card-info h4')?.textContent.trim() || 'R$ 0,00';
-        const price = parsePrice(priceText);
-        const img = card.querySelector('img')?.src || '';
-        return {title, desc, price, img};
-    }
+function getProductFromCard(card) {
+    const title = card.querySelector('.card-info h2')?.textContent.trim() || '';
+    const desc = card.querySelector('.card-info p')?.textContent.trim() || '';
+    const priceText = card.querySelector('.card-info h4')?.textContent.trim() || 'R$ 0,00';
+    const price = parsePrice(priceText);
+    const img = card.querySelector('img')?.src || '';
+
+    return {
+        title,
+        desc,
+        price,
+        img,
+        category: card.dataset.category || ''
+    };
+
+    /* if(product.category === 'acai'){
+    extrasContainer.classList.add('active'); */
+}
+
 
     function addToCart(product, qty = 1) {
         const cart = getCart();
-        const existing = cart.find(item => item.title === product.title);
+        const existing = cart.find(item =>
+    item.title === product.title &&
+    JSON.stringify(item.acompanhamentos) === JSON.stringify(product.acompanhamentos) &&
+    item.calda === product.calda
+);
         if (existing) {
             existing.qty += qty;
         } else {
-            cart.push({
-                title: product.title,
-                desc: product.desc,
-                price: product.price,
-                qty: qty
-            });
+         cart.push({
+    title: product.title,
+    desc: product.desc,
+    price: product.price,
+    qty,
+    acompanhamentos: product.acompanhamentos || [],
+    calda: product.calda || '',
+    adicional: product.adicional || 0
+});
         }
         saveCart(cart);
         updateCartCount();
@@ -120,12 +138,27 @@ const inputEndereco = document.getElementById('input-endereco')
             total += subtotal;
             const card = document.createElement('div');
             card.className = 'cart-item';
-            card.innerHTML = `
-                <button class="cart-item-remove" type="button" aria-label="Remover item">×</button>
-                <h3>${item.title}</h3>
-                <span>Qtd: ${item.qty}</span>
-                <span>Subtotal: ${formatPrice(subtotal)}</span>
-            `;
+           card.innerHTML = `
+    <button class="cart-item-remove">×</button>
+
+    <h3>${item.title}</h3>
+
+    ${
+        item.acompanhamentos?.length
+            ? `<span><strong>Acompanhamentos:</strong> ${item.acompanhamentos.join(', ')}</span>`
+            : ''
+    }
+
+    ${
+        item.calda
+            ? `<span><strong>Calda:</strong> ${item.calda}</span>`
+            : ''
+    }
+
+    <span>Qtd: ${item.qty}</span>
+
+    <span>Subtotal: ${formatPrice(subtotal)}</span>
+`;
             const removeButton = card.querySelector('.cart-item-remove');
             removeButton.addEventListener('click', () => {
                 removeFromCart(index);
@@ -143,18 +176,40 @@ const inputEndereco = document.getElementById('input-endereco')
         renderCart();
     }
 
-    function finalizeOrder() {
-        const cart = getCart();
-        if (cart.length === 0) {
-            alert('Carrinho vazio. Adicione produtos antes de finalizar.');
-            return;
-        }
-        saveCart([]);
-        updateCartCount();
-        renderCart();
-        closeCartPanel();
-        alert('Pedido finalizado! Obrigado pela compra.');
+   function finalizeOrder() {
+
+    const cart = getCart();
+
+    if(cart.length === 0){
+        alert("Carrinho vazio");
+        return;
     }
+
+    const pedidos =
+        JSON.parse(localStorage.getItem('mk_pedidos')) || [];
+
+    const novoPedido = {
+        id: Date.now(),
+        cliente: "Cliente",
+        total: cart.reduce(
+            (acc,item) => acc + (item.price * item.qty),
+            0
+        ),
+        itens: cart.map(item => item.title),
+        status: "recebidos"
+    };
+
+    pedidos.push(novoPedido);
+
+    localStorage.setItem(
+        'mk_pedidos',
+        JSON.stringify(pedidos)
+    );
+
+    localStorage.removeItem('mk_cart');
+
+    alert('Pedido enviado!');
+}
 
     function openCart() {
         renderCart();
@@ -173,20 +228,33 @@ const inputEndereco = document.getElementById('input-endereco')
         cartPanel.setAttribute('aria-hidden', 'true');
     }
 
-    function openModal(product) {
-        currentProduct = product;
-        currentQty = 1;
-        modalImage.src = product.img;
-        modalTitle.textContent = product.title;
-        modalDesc.textContent = product.desc;
-        modalPrice.textContent = formatPrice(product.price);
-        qtyValue.textContent = currentQty;
-        modal.classList.add('active');
-        modalOverlay.classList.add('active');
-        modal.removeAttribute('hidden');
-        modalOverlay.removeAttribute('hidden');
-        modal.setAttribute('aria-hidden', 'false');
+function openModal(product) {
+
+    currentProduct = product;
+    currentQty = 1;
+
+    modalImage.src = product.img;
+    modalTitle.textContent = product.title;
+    modalDesc.textContent = product.desc;
+    modalPrice.textContent = formatPrice(product.price);
+
+    qtyValue.textContent = currentQty;
+
+    const extrasContainer =
+        document.getElementById('extras-container');
+
+    if(product.category === 'acai'){
+        extrasContainer.style.display = 'block';
+    }else{
+        extrasContainer.style.display = 'none';
     }
+
+    modal.classList.add('active');
+    modalOverlay.classList.add('active');
+
+    modal.removeAttribute('hidden');
+    modalOverlay.removeAttribute('hidden');
+}
 
     function closeModal() {
         modal.classList.remove('active');
@@ -195,6 +263,12 @@ const inputEndereco = document.getElementById('input-endereco')
         modalOverlay.setAttribute('hidden', '');
         modal.setAttribute('aria-hidden', 'true');
         currentProduct = null;
+
+        document
+    .querySelectorAll('#extras-container input[type="checkbox"]')
+    .forEach(input => input.checked = false);
+
+document.getElementById('calda-select').selectedIndex = 0;
     }
 
     productCards.forEach(card => {
@@ -240,12 +314,56 @@ const inputEndereco = document.getElementById('input-endereco')
     });
 
     addToCartBtn.addEventListener('click', () => {
-        if (!currentProduct) return;
 
-        addToCart(currentProduct, currentQty);
+    if (!currentProduct) return;
+
+    let acompanhamentos = [];
+    let calda = '';
+    let adicionaisValor = 0;
+
+    // Verifica se é um produto de açaí
+    const isAcai = currentProduct.title
+        .toLowerCase()
+        .includes('açaí');
+
+    if (isAcai) {
+
+        acompanhamentos = [
+    ...document.querySelectorAll(
+        '#extras-container input:not(.adicional):checked'
+    )
+].map(item => item.value);
+
+        calda = document.getElementById('calda-select').value;
+
+        document.querySelectorAll('.adicional:checked')
+            .forEach(item => {
+                adicionaisValor += Number(item.dataset.price);
+            });
+    }
+
+    const produtoFinal = {
+        ...currentProduct,
+        acompanhamentos,
+        calda,
+        adicional: adicionaisValor
+    };
+
+    produtoFinal.price += adicionaisValor;
+
+    addToCart(produtoFinal, currentQty);
+
+    closeModal();
+
+    alert(`${currentQty}x ${currentProduct.title} adicionado ao carrinho`);
+});
+
+
+
+        /* addToCart(currentProduct, currentQty);
         closeModal();
-        alert(`${currentQty} x ${currentProduct.title} adicionado ao carrinho`);
-    });
+        alert(`${currentQty} x ${currentProduct.title} adicionado ao carrinho`); */
+    
 
 
 

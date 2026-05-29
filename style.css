@@ -31,7 +31,7 @@ body {
 header {
     padding: 20px 4%;
     position: relative;
-    z-index: 9999999999;
+    z-index: 100;
 }
 
 header {
@@ -462,12 +462,17 @@ section.main-cards .interface a h4{
     z-index: 10001;
     padding: 18px;
     display: none;
+     max-height: 90vh;
+    overflow-y: auto;
 }
 .product-modal.active {
     display: block;
     transform: translate(-50%, -50%) scale(1);
     transition: transform 0.16s ease;
 }
+.product-modal::-webkit-scrollbar {
+  display: none;
+} 
 .modal-close {
     position: absolute;
     right: 14px;
@@ -480,8 +485,10 @@ section.main-cards .interface a h4{
 }
 .modal-content {
     display: flex;
+    flex-direction: column;
     gap: 18px;
-    align-items: flex-start;
+   justify-content: center;
+    align-items: center;
 }
 .modal-content img {
     width: 180px;
@@ -490,7 +497,7 @@ section.main-cards .interface a h4{
     object-fit: cover;
 }
 .modal-info {
-    flex: 1;
+   width: 100%;
 }
 .modal-price {
     font-size: 1.2rem;
@@ -503,7 +510,7 @@ section.main-cards .interface a h4{
     justify-content: center;
     align-items: center;
     gap: 12px;
-    margin-bottom: 16px;
+    margin:10px 5%;
 }
 .qty-controls button {
     width: 42px;
@@ -531,41 +538,79 @@ section.main-cards .interface a h4{
     font-weight: 700;
 }
 
+.extras-container {
+    display: none;
+    margin-top: 20px;
+    padding: 15px;
+    background: #f7f7f7;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    
+    
+}
+
+
+.extras-container label {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+    
+}
+
+.extras-container h3 {
+    margin: 15px 0 10px;
+    color: var(--primary-color);
+}
+
+.extras-container select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
 .cart-panel-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
-    z-index: 10002;
+    z-index: 998;
+    display: none;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.24s ease;
+    transition: opacity 0.3s ease;
 }
 .cart-panel-overlay.active {
     display: block;
     opacity: 1;
     pointer-events: auto;
+    width: 100%;
 }
 .cart-panel {
     position: fixed;
     right: 0;
     top: 0;
-    height: 100vh;
+    height: 100dvh;
     width: min(360px, 90vw);
     background: #000;
     color: #fff;
     box-shadow: -14px 0 40px rgba(0, 0, 0, 0.32);
 
-    z-index: 10003;
+    z-index: 999;
     padding: 20px;
     display: block;
     transform: translateX(100%);
     opacity: 0;
-    transition: transform 0.5s ease, opacity 0.5s ease;
+    transition: transform 0.5s ease-in, opacity 0.5s ease-out;
+    overflow-x: hidden;
     overflow-y: auto;
+    will-change: transform;
 }
 .cart-panel.active {
+    
     transform: translateX(0);
     opacity: 1;
+    
 }
 .cart-panel-header {
     display: flex;
