@@ -409,6 +409,13 @@ function parsePrice(priceText) {
     return parseFloat(cleaned) || 0;
 }
 
+function normalizeText(value) {
+    return String(value || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+}
+
 function getCart() {
     return JSON.parse(localStorage.getItem('mk_cart') || '[]');
 }
@@ -453,7 +460,9 @@ function addToCart(product, qty = 1) {
     const existing = cart.find((item) =>
         item.title === product.title &&
         JSON.stringify(item.acompanhamentos) === JSON.stringify(product.acompanhamentos) &&
-        item.calda === product.calda
+        JSON.stringify(item.adicionais || []) === JSON.stringify(product.adicionais || []) &&
+        item.calda === product.calda &&
+        Number(item.adicional || 0) === Number(product.adicional || 0)
     );
 
     if (existing) {
@@ -465,6 +474,7 @@ function addToCart(product, qty = 1) {
             price: product.price,
             qty,
             acompanhamentos: product.acompanhamentos || [],
+            adicionais: product.adicionais || [],
             calda: product.calda || '',
             adicional: product.adicional || 0
         });
@@ -522,6 +532,7 @@ function renderCart() {
             <button class="cart-item-remove">×</button>
             <h3>${escapeHtml(item.title)}</h3>
             ${item.acompanhamentos?.length ? `<span><strong>Acompanhamentos:</strong> ${escapeHtml(item.acompanhamentos.join(', '))}</span>` : ''}
+            ${item.adicionais?.length ? `<span><strong>Adicionais:</strong> ${escapeHtml(item.adicionais.join(', '))}</span>` : ''}
             ${item.calda ? `<span><strong>Calda:</strong> ${escapeHtml(item.calda)}</span>` : ''}
             <span>Qtd: ${item.qty}</span>
             <span>Subtotal: ${formatPrice(subtotal)}</span>
@@ -723,12 +734,12 @@ if (addToCartBtn) {
         if (!currentProduct) return;
 
         let acompanhamentos = [];
+        let adicionais = [];
         let calda = '';
         let adicionaisValor = 0;
 
-        const isAcai = currentProduct.title
-            .toLowerCase()
-            .includes('açaí');
+        const isAcai = currentProduct.category === 'acai' ||
+            normalizeText(currentProduct.title).includes('acai');
 
         if (isAcai) {
             acompanhamentos = [
@@ -738,6 +749,7 @@ if (addToCartBtn) {
             calda = document.getElementById('calda-select').value;
 
             document.querySelectorAll('.adicional:checked').forEach((item) => {
+                adicionais.push(item.value);
                 adicionaisValor += Number(item.dataset.price);
             });
         }
@@ -745,6 +757,7 @@ if (addToCartBtn) {
         const produtoFinal = {
             ...currentProduct,
             acompanhamentos,
+            adicionais,
             calda,
             adicional: adicionaisValor
         };

@@ -175,6 +175,10 @@ function printOrder(id) {
   if (!order) return;
 
   const w = window.open('', '', 'width=360,height=600');
+  if (!w) {
+    alert('Nao foi possivel abrir a janela de impressao. Verifique se o bloqueador de pop-up esta ativo.');
+    return;
+  }
   w.document.write(`<pre style="font:16px monospace">${printText(order)}</pre>`);
   w.print();
 }

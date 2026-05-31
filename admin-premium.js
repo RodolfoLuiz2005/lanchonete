@@ -343,6 +343,10 @@ window.printOrder = (id) => {
   const o = MKStore.orders().find((x) => String(x.id) === String(id));
   if (!o) return;
   const w = window.open('', '', 'width=360,height=600');
+  if (!w) {
+    alert('Nao foi possivel abrir a janela de impressao. Verifique se o bloqueador de pop-up esta ativo.');
+    return;
+  }
   w.document.write(`<pre style="font:16px monospace">${buildOrderPrintText(o)}</pre>`);
   w.print();
 };
