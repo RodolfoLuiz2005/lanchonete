@@ -708,3 +708,151 @@ section.main-cards .interface a h4{
         margin: 0 auto;
     }
 }
+
+.cart-order-summary {
+    background: #ffffffe6;
+    color: #000;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 14px;
+    display: none;
+}
+
+.cart-order-summary.active {
+    display: block;
+}
+
+.cart-order-summary h3 {
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.cart-order-summary p {
+    font-size: 0.92rem;
+    line-height: 1.4;
+    margin-bottom: 4px;
+}
+
+.cart-order-warning {
+    color: #fff;
+    background: rgba(217, 82, 4, 0.22);
+    border: 1px solid rgba(242, 233, 233, 0.28);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 14px;
+    font-size: 0.9rem;
+}
+
+.order-intake-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 10002;
+    display: none;
+}
+
+.order-intake-overlay.active {
+    display: block;
+}
+
+.order-intake-modal {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.98);
+    background: var(--letras-cor);
+    color: #000;
+    width: 92%;
+    max-width: 640px;
+    border-radius: 14px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    z-index: 10003;
+    padding: 18px;
+    display: none;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.order-intake-modal.active {
+    display: block;
+    transform: translate(-50%, -50%) scale(1);
+    transition: transform 0.16s ease;
+}
+
+.order-intake-close {
+    position: absolute;
+    right: 14px;
+    top: 10px;
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--primary-color);
+}
+
+.order-intake-title {
+    margin-bottom: 12px;
+}
+
+.order-choice-buttons {
+    display: grid;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.order-choice-buttons button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: var(--secondary-color);
+    color: var(--letras-cor);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.order-intake-form {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.order-intake-form input,
+.order-intake-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+}
+
+.order-intake-form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.order-intake-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 6px;
+}
+
+.order-intake-actions button {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.order-intake-actions .save {
+    background: var(--secondary-color);
+    color: var(--letras-cor);
+}
+
+.order-intake-actions .back {
+    background: #ececec;
+    color: #000;
+}

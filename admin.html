@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Administrativo — MK</title>
+  <link rel="stylesheet" href="admin-premium.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="logo"><strong>MK</strong><span>Admin</span></div>
+    <nav>
+      <button class="nav-btn active" data-page="dashboard"><i class="bi bi-grid"></i>Dashboard</button>
+      <button class="nav-btn" data-page="produtos"><i class="bi bi-basket"></i>Produtos</button>
+      <button class="nav-btn" data-page="promocoes"><i class="bi bi-percent"></i>Promoções</button>
+      <button class="nav-btn" data-page="pedidos"><i class="bi bi-receipt"></i>Pedidos</button>
+      <button class="nav-btn" data-page="mesas"><i class="bi bi-qr-code"></i>Mesas / QR Code</button>
+      <button class="nav-btn" data-page="config"><i class="bi bi-gear"></i>Configurações</button>
+    </nav>
+    <a class="side-link" href="cozinha.html" target="_blank"><i class="bi bi-display"></i>Abrir cozinha</a>
+    <a class="side-link" href="index.html" target="_blank"><i class="bi bi-shop"></i>Ver cardápio</a>
+    <button class="logout" id="logout"><i class="bi bi-box-arrow-right"></i>Sair</button>
+  </aside>
+
+  <main class="app">
+    <header class="topbar">
+      <button id="menu-toggle" class="icon-btn"><i class="bi bi-list"></i></button>
+      <div><span class="eyebrow">controle geral</span><h1 id="page-title">Dashboard</h1></div>
+      <div class="status-pill"><span></span>Sistema local</div>
+    </header>
+
+    <section id="dashboard" class="page active">
+      <div class="cards kpis">
+        <article class="card"><small>Faturamento hoje</small><strong id="fat-hoje">R$ 0,00</strong><span id="pedidos-hoje-mini">0 pedidos</span></article>
+        <article class="card"><small>Faturamento semana</small><strong id="fat-semana">R$ 0,00</strong><span>semana atual</span></article>
+        <article class="card"><small>Faturamento mês</small><strong id="fat-mes">R$ 0,00</strong><span>mês atual</span></article>
+        <article class="card"><small>Ticket médio</small><strong id="ticket-medio">R$ 0,00</strong><span>hoje</span></article>
+      </div>
+      <div class="grid-2">
+        <article class="panel"><h2>Resumo de vendas</h2><div id="sales-bars" class="bars"></div></article>
+        <article class="panel"><h2>Produtos mais vendidos</h2><div id="top-products" class="top-list"></div></article>
+      </div>
+    </section>
+
+    <section id="produtos" class="page">
+      <div class="panel">
+        <div class="panel-head"><h2>Gestão de produtos</h2><button id="new-product" class="primary">Novo produto</button></div>
+        <form id="product-form" class="form-grid hidden">
+          <input type="hidden" id="product-id">
+          <label>Nome<input id="product-name" required></label>
+          <label>Categoria<input id="product-category" placeholder="Hambúrguer, Pizza..."></label>
+          <label>Preço<input id="product-price" type="number" step="0.01" required></label>
+          <label>Imagem<input id="product-image" placeholder="img/hamb.gourmet.jpg"></label>
+          <label class="full">Descrição<textarea id="product-desc"></textarea></label>
+          <label class="check"><input id="product-active" type="checkbox" checked> Disponível</label>
+          <label class="check"><input id="product-featured" type="checkbox"> Destaque</label>
+          <div class="actions full"><button class="primary" type="submit">Salvar produto</button><button type="button" id="cancel-product">Cancelar</button></div>
+        </form>
+        <div id="products-table" class="table"></div>
+      </div>
+    </section>
+
+    <section id="promocoes" class="page">
+      <div class="panel">
+        <div class="panel-head"><h2>Promoções</h2><button id="new-promo" class="primary">Nova promoção</button></div>
+        <form id="promo-form" class="form-grid hidden">
+          <input type="hidden" id="promo-id">
+          <label>Título<input id="promo-title" required></label>
+          <label>Desconto %<input id="promo-discount" type="number" min="0" max="100" value="10"></label>
+          <label class="full">Descrição<textarea id="promo-desc"></textarea></label>
+          <label class="check"><input id="promo-active" type="checkbox" checked> Ativa</label>
+          <div class="actions full"><button class="primary" type="submit">Salvar promoção</button><button type="button" id="cancel-promo">Cancelar</button></div>
+        </form>
+        <div id="promos-table" class="table"></div>
+      </div>
+    </section>
+
+    <section id="pedidos" class="page">
+      <div class="panel"><div class="panel-head"><h2>Pedidos recentes</h2><button id="clear-finalized">Limpar finalizados</button></div><div id="orders-table" class="table"></div></div>
+    </section>
+
+    <section id="mesas" class="page">
+      <div class="panel"><h2>QR Code das mesas</h2><p class="muted">Use o link da mesa no QR Code. Futuramente dá para gerar a imagem automaticamente.</p><div id="tables-list" class="qr-grid"></div></div>
+    </section>
+
+    <section id="config" class="page">
+      <div class="panel"><h2>Configurações</h2>
+        <form id="config-form" class="form-grid">
+          <label>Nome da loja<input id="cfg-loja"></label>
+          <label>Usuário admin<input id="cfg-user"></label>
+          <label>Senha admin<input id="cfg-pass"></label>
+          <label>Quantidade de mesas<input id="cfg-mesas" type="number" min="1"></label>
+          <div class="actions full"><button class="primary" type="submit">Salvar configurações</button></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script src="mk-data.js"></script>
+  <script src="admin-premium.js"></script>
+</body>
+</html>

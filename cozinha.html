@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel da Cozinha — MK</title>
+  <link rel="stylesheet" href="cozinha.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+<body>
+  <header class="kitchen-top">
+    <div><span>MK Cozinha</span><h1>Pedidos em preparo</h1></div>
+    <div class="top-actions"><button id="enable-sound"><i class="bi bi-volume-up"></i> Ativar som</button><a href="admin.html">Admin</a></div>
+  </header>
+  <main class="kitchen-board">
+    <section class="k-col" id="recebidos"><h2>Recebidos</h2></section>
+    <section class="k-col" id="preparando"><h2>Preparando</h2></section>
+    <section class="k-col" id="pronto"><h2>Prontos</h2></section>
+    <section class="k-col" id="entrega"><h2>Entrega</h2></section>
+    <section class="k-col" id="finalizado"><h2>Finalizados</h2></section>
+  </main>
+  <script src="mk-data.js"></script>
+  <script src="cozinha.js"></script>
+</body>
+</html>

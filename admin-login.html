@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Admin — MK</title>
+  <link rel="stylesheet" href="admin-premium.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+<body class="login-page">
+  <main class="login-shell">
+    <section class="login-brand">
+      <span class="eyebrow">Painel premium</span>
+      <h1>MK Lanchonete</h1>
+      <p>Controle produtos, promoções, pedidos, cozinha, mesas e faturamento em um só lugar.</p>
+    </section>
+    <form class="login-box" id="login-form">
+      <h2>Acessar painel</h2>
+      <label>Usuário<input id="login-user" autocomplete="username" placeholder="admin"></label>
+      <label>Senha<input id="login-pass" type="password" autocomplete="current-password" placeholder="123456"></label>
+      <button type="submit">Entrar</button>
+      <small>Login inicial: <strong>admin</strong> / <strong>123456</strong>. Altere em Configurações.</small>
+    </form>
+  </main>
+  <script src="mk-data.js"></script>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      const cfg = MKStore.config();
+      const u = document.getElementById('login-user').value.trim();
+      const p = document.getElementById('login-pass').value.trim();
+      if(u === cfg.usuario && p === cfg.senha){
+        sessionStorage.setItem('mk_admin_auth','ok');
+        location.href='admin.html';
+      } else alert('Usuário ou senha inválidos.');
+    });
+  </script>
+</body>
+</html>
